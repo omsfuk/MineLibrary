@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.omsfuk.library.web.dao.CommentDAO">
+    <select id="listCommentByBookId" resultType="comment">
+        SELECT id, parent_id, created, deleted, content,
+            (SELECT user.username from user where id = user_id) as username
+        FROM comment
+        WHERE valid = 1 AND deleted = FALSE AND book_id = #{bookId}
+        ORDER BY id DESC
+        LIMIT #{page.pageNumber}, #{page.pageSize}
+    </select>
+
+    <insert id="insertComment">
+        INSERT comment(user_id, book_id, parent_id, content, created)
+        VALUES(#{comment.userId}, #{comment.bookId}, #{comment.parentId}, #{comment.content}, now())
+    </insert>
+    
+    <update id="deleteCommentById">
+        UPDATE comment
+        SET deleted = TRUE
+        WHERE id = #{id}
+    </update>
+    
+    <select id="listUnexaminedComment" resultType="comment">
+        SELECT id, book_id, created, content, valid,
+            (SELECT username FROM user WHERE id = user_id) as username
+        FROM comment
+        WHERE valid IN (0, 1, 2) AND deleted = FALSE
+        ORDER BY id DESC
+        LIMIT #{page.pageNumber}, #{page.pageSize}
+    </select>
+    
+    <update id="permitComment">
+        UPDATE comment
+        SET valid = #{valid}
+        WHERE id = #{commentId}
+    </update>
+    
+    <select id="countCommentToExamine" resultType="int">
+        SELECT COUNT(1)
+        FROM comment
+        WHERE valid = 2 AND DELETED = FALSE
+        LIMIT 100
+    </select>
+</mapper>

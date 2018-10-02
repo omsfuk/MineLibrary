@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>MineLibrary</title>
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="icon" type="image/png" href="../assets/i/favicon.png">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="apple-touch-icon-precomposed" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<header th:replace="reader/navbar::navbar('')">
+
+</header>
+<div class="am-panel reader-main">
+    <div class="am-panel-bd">
+        <table class="am-table am-table-bordered am-table-radius">
+            <tr>
+                <td>标题</td>
+                <td th:text="${book.title}"></td>
+            </tr>
+            <tr>
+                <td>分类</td>
+                <td th:text="${book.clas}"></td>
+            </tr>
+            <tr>
+                <td>载体形态</td>
+                <td th:text="${book.carrier}"></td>
+            </tr>
+            <tr>
+                <td>出版社</td>
+                <td th:text="${book.press}"></td>
+            </tr>
+            <tr>
+                <td>ISBN</td>
+                <td th:text="${book.isbn}"></td>
+            </tr>
+            <tr>
+                <td>简介</td>
+                <td th:text="${book.desc}"></td>
+            </tr>
+            <tr>
+                <td>馆藏量</td>
+                <td th:text="${book.count}"></td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="am-g">
+        <form method="post" action="/reader/borrowBook">
+            <input type="hidden" th:value="${book.id}" name="id"/>
+            <button th:disabled="${book.count > 0 ? 'false' : 'true'}" th:class="${book.count} > 0 ? 'am-btn am-btn-success am-btn-lg am-u-sm-12' : 'am-btn am-u-sm-12 am-btn-danger am-btn-lg'" th:text="${book.count} > 0 ? '借阅' : '馆藏为零！不可借阅'"></button>
+        </form>
+    </div>
+    <div class="am-g" style="margin-bottom: 20px">
+        <button type="button" class="am-u-sm-12 am-btn am-btn-primary" data-am-modal="{target: '#modal1', closeViaDimmer: 0}">写评论</button>
+    </div>
+    <article class="am-comment" th:each="comment : ${comments}" style="margin-bottom: 20px">
+        <a>
+            <img src="/assets/img/portrait.png" alt="" class="am-comment-avatar" width="48" height="48"/>
+        </a>
+
+        <div class="am-comment-main">
+            <header class="am-comment-hd">
+                <!--<h3 class="am-comment-title">评论标题</h3>-->
+                <div class="am-comment-meta">
+                    <a class="am-comment-author" th:text="${comment.username}"></a>
+                    评论于 <time th:text="${#dates.format(comment.created, 'yyyy-MM-dd HH:mm')}"></time>
+                    <a th:if="${comment.parentId != null}" class="am-fr">查看对话</a>
+                </div>
+            </header>
+
+            <div class="am-comment-bd" th:text="${comment.content}">
+
+            </div>
+        </div>
+    </article>
+    <ul th:if="!${#lists.size(comments) == 0}" data-am-widget="pagination" class="am-pagination am-pagination-select" style="margin: 0px 20%">
+        <li class="am-pagination-prev ">
+            <a th:href="${'/reader/book_detail?id=' + book.id + '&page=' + (page - 1 < 0 ? page : page - 1)}" class="">下一页</a>
+        </li>
+        </li>
+        <li class="am-pagination-next ">
+            <a th:href="${'/reader/book_detail?id=' + book.id + '&page=' + (page + 1)}" class="">下一页</a>
+        </li>
+    </ul>
+</div>
+
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="modal1">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">欢迎吐槽(@^_^@)
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <form method="post" action="/reader/new_comment">
+                <div class="am-input-group">
+                    <input type="text" class="am-form-field" name="content" placeholder="请吐槽"/>
+                    <input type="hidden" th:value="${book.id}" name="bookId"/>
+                        <span class="am-input-group-btn">
+                            <button class="am-btn am-btn-default" type="button">&lt;-</button>
+                        </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="/assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jjqueryquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<![endif]-->
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/helper.js"></script>
+<script>
+    // $(document).ready(function() {
+    //     $.post("/reader/borrow", {}, function(res) {
+    //         if (res.status == 200) {
+    //             helper.update(res.data)
+    //         }
+    //     })
+    // })
+    $(function() {
+        var $confirm = $('#confirm');
+        var $confirmBtn = $confirm.find('[data-am-modal-confirm]');
+        var $cancelBtn = $confirm.find('[data-am-modal-cancel]');
+        $confirmBtn.off('click.confirm.modal.amui').on('click', function() {
+            // do something
+        });
+
+        $cancelBtn.off('click.cancel.modal.amui').on('click', function() {
+            // do something
+        });
+    });
+</script>
+</html>

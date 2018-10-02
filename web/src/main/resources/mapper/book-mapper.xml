@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.omsfuk.library.web.dao.BookDAO">
+    <select id="selectBookById" parameterType="int" resultType="book">
+        SELECT *
+        FROM book
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertBook" parameterType="book" useGeneratedKeys="false" keyProperty="id">
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO book(title, press, carrier, isbn, subject, `desc`, clas, `count`)
+        VALUES(#{book.title}, #{book.press}, #{book.carrier}, #{book.isbn}, #{book.subject}, #{book.desc}, #{book.clas}, #{book.count})
+    </insert>
+
+    <select id="lastInsertId" resultType="int">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <select id="listAllBook" resultType="book">
+        SELECT * FROM book
+    </select>
+
+    <update id="updateBookCountById">
+        UPDATE book
+        SET count = count + #{delta}
+        WHERE id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="selectBookCountById" resultType="int">
+        SELECT count
+        FROM book
+        WHERE id = #{bookId}
+    </select>
+
+    <select id="listRecentBook" resultType="book">
+        SELECT id, title, `date`, `count`
+        FROM book
+        ORDER BY id DESC
+        LIMIT ${@cn.omsfuk.library.web.config.AppConfig@RECENT_BOOK_PAGE_SIZE}
+    </select>
+
+</mapper>

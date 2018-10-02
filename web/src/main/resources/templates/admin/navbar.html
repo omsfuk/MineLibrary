@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8" />
+<body>
+<!-- 定义模板时，可以传入参数 -->
+<header th:fragment="navbar(element)" class="am-topbar">
+    <h1 class="am-topbar-brand">
+        <a href="/admin/main"><i class="am-icon-book">&nbsp;MineLibrary</i></a>
+    </h1>
+
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#doc-topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+    <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav">
+            <li th:class="${element} == 'new_book' ? 'am-active' : ''"><a href="/admin/new_book">新增图书</a></li>
+            <li th:class="${element} == 'examine_comment' ? 'am-active' : ''"><a href="/admin/examine_comment">评论审核</a></li>
+        </ul>
+
+        <div class="am-topbar-right">
+            <div class="am-dropdown" data-am-dropdown="{boundary: '.am-topbar'}">
+                <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm am-dropdown-toggle" data-am-dropdown-toggle><span th:text="${session.user.username}"></span> <span class="am-icon-caret-down"></span></button>
+                <ul class="am-dropdown-content">
+                    <li><a href="/logout">注销</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+
+</html>

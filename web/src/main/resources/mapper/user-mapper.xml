@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.omsfuk.library.web.dao.UserDAO">
+    <select id="selectUserById" resultType="user">
+        SELECT *
+        FROM user
+        WHERE id = #{id}
+    </select>
+    <select id="selectUserByUsername" resultType="user">
+        SELECT *
+        FROM user
+        WHERE username = #{username}
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user(username, password, phone, email, max_borrow, qq)
+        VALUES(#{user.username}, #{user.password}, #{user.phone}, #{user.email}, #{user.max_borrow}, #{user.qq})
+    </insert>
+
+    <update id="updateUserById" parameterType="user">
+        UPDATE user
+        SET password = #{user.password},
+            email = #{user.email},
+            qq = #{user.qq},
+            phone = #{user.phone}
+        WHERE id = #{user.id}
+    </update>
+</mapper>

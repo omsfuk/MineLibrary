@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>MineLibrary</title>
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="icon" type="image/png" href="../assets/i/favicon.png">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="apple-touch-icon-precomposed" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="../assets/i/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+
+    <link rel="stylesheet" href="../assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .search-body {
+            margin: 100px 20%;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="reader/navbar::navbar('')">
+
+</header>
+<div class="search-body">
+<form class="am-form">
+    <div class="am-input-group">
+        <input type="text" class="am-form-field" name="title" placeholder="搜索内容.e.g 三体"/>
+        <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button"><span class="am-icon-search"></span></button>
+        </span>
+    </div>
+    <div class="am-form-group">
+        <label class="am-radio-inline">
+            <input type="radio"  value="title" name="item"/>标题
+        </label>
+        <label class="am-radio-inline">
+            <input type="radio" value="isbn" name="item"/>ISBN
+        </label>
+    </div>
+</form>
+<table th:if="${not (books eq null || #lists.size(books) == 0)}" class="am-table am-table-bordered am-table-radius am-table-striped">
+    <col style="width: 20%" />
+    <col style="width: 80%" />
+    <tr>
+        <th>ID</th>
+        <th>书名</th>
+    </tr>
+    <tr th:each="book: ${books}">
+        <td th:text="${book.id}"></td>
+        <td><a th:href="'/reader/book_detail?id=' + ${book.id}" th:text="${book.title}"></a></td>
+    </tr>
+</table>
+<ul th:if="!${#lists.size(books) == 0}" data-am-widget="pagination" class="am-pagination am-pagination-select" style="margin: 0px 20%">
+    <li class="am-pagination-prev ">
+        <a th:href="${'/reader/search?title=' + title + '&page=' + (page - 1 < 0 ? page : page - 1)}" class="">下一页</a>
+    </li>
+    </li>
+    <li class="am-pagination-next ">
+        <a th:href="${'/reader/search?title=' + title + '&page=' + (page + 1)}" class="">下一页</a>
+    </li>
+</ul>
+<div th:if="${books eq null || #lists.size(books) == 0}">
+无馆藏
+</div>
+</div>
+</body>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="../assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="../assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="../assets/js/amazeui.min.js"></script>
+</html>

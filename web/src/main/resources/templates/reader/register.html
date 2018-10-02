@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>注册</title>
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="icon" type="image/png" href="../assets/i/favicon.png">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="apple-touch-icon-precomposed" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+
+    <link rel="stylesheet" href="../assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .register-form {
+            margin: 50px 30%;
+        }
+    </style>
+</head>
+<body>
+    <div class="am-panel am-panel-default register-form">
+        <div class="am-panel-hd">
+            注册
+        </div>
+        <div class="am-panel-bd">
+            <form class="am-form" method="post">
+                <fieldset>
+                    <div class="am-form-group">
+                        <label for="username">用户ID</label>
+                        <input type="text" id="username" name="username" placeholder="输入用户ID">
+                    </div>
+                    <div class="am-form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" name="password" placeholder="输入密码">
+                    </div>
+                    <div class="am-form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password_2nd" placeholder="输入密码">
+                    </div>
+                    <div class="am-form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" name="email" placeholder="输入邮箱">
+                    </div>
+
+                    <div class="am-form-group">
+                        <label for="phone">手机号</label>
+                        <input type="text" id="phone" name="phone" placeholder="输入手机号">
+                    </div>
+                    <div class="am-form-group">
+                        <label for="qq">qq</label>
+                        <input type="text" id="qq" name="qq" placeholder="qq">
+                    </div>
+
+                    <p>
+                        <button type="submit" class="am-btn am-btn-default">注册</button>
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</body>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="../assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="../assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="../assets/js/amazeui.min.js"></script>
+
+<script>
+    /*
+function register() {
+    var username = $("username").value
+    var password = $("password").value
+    var phone = $("phone").value
+    var email = $("email").value
+    var qq = $("qq").value
+    $.post("/reader/register", {username: username, password: password,
+        phone: phone, email: email, qq: qq}, function(res) {
+        if (res.status == 200) {
+            alert("注册成功")
+            window.location.href = "/reader/looogin"
+        } else {
+            alert("注册失败")
+        }
+    })
+}
+*/
+</script>
+</html>

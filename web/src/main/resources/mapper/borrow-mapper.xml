@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.omsfuk.library.web.dao.BorrowDAO">
+    
+    <select id="listBorrowByUsername" resultType="borrow">
+        SELECT book.title, borrow.start_date, borrow.end_date, borrow.user_id, borrow.book_id, borrow.renew_times
+        FROM borrow INNER JOIN book
+                on borrow.book_id = book.id
+        WHERE returned = false AND borrow.user_id = (SELECT user.id FROM user where username = #{username})
+        LIMIT #{page.pageNumber}, #{page.pageSize}
+    </select>
+    <select id="listBorrowByUserId" resultType="borrow">
+        SELECT book.title, borrow.start_date, borrow.end_date, borrow.user_id, borrow.book_id, borrow.renew_times
+        FROM borrow INNER JOIN book
+                on borrow.book_id = book.id
+        WHERE returned = false AND borrow.user_id = #{userId}
+        LIMIT #{page.pageNumber}, #{page.pageSize}
+    </select>
+
+    <update id="renewBorrowById">
+        UPDATE borrow
+        SET end_date = date_add(end_date, interval 30 day), renew_times = renew_times + 1
+        WHERE returned = false AND user_id = #{user_id} AND book_id = #{book_id} AND renew_times &lt; ${@cn.omsfuk.library.web.config.AppConfig@MAX_RENEW}
+    </update>
+
+    <insert id="borrowBookById">
+        INSERT INTO borrow(book_id, user_id, start_date, end_date)
+        VALUES
+        <foreach collection="ids" separator="," item="item">
+            (#{item}, #{userId}, now(), date_add(now(), interval 30 day))
+        </foreach>
+    </insert>
+
+
+    <update id="returnBookById">
+        UPDATE borrow
+        SET returned = TRUE
+        WHERE returned = FALSE AND user_id = #{userId} AND book_id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="countBorrowByUserId" resultType="int">
+        SELECT count(1)
+        FROM borrow
+        WHERE returned = false AND user_id = #{userId}
+    </select>
+
+    <select id="countOverdueSoonByUserId" resultType="int">
+        SELECT count(1)
+        FROM borrow
+        WHERE returned = false AND user_id = #{userId} AND to_days(end_date) - to_days(start_date) &lt; ${@cn.omsfuk.library.web.config.AppConfig@NOTICE_BEFORE_DAYS}
+    </select>
+
+    <select id="isBorrowed" resultType="int">
+        SELECT count(1)
+        FROM borrow
+        WHERE returned = FALSE AND user_id = #{userId} AND book_id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="listBorrowedByUserId" resultType="borrow">
+        SELECT book.title, borrow.start_date, borrow.end_date, borrow.user_id, borrow.book_id, borrow.renew_times
+        FROM borrow INNER JOIN book
+                on borrow.book_id = book.id
+        WHERE returned = TRUE AND borrow.user_id = #{userId}
+        LIMIT #{page.pageNumber}, #{page.pageSize}
+    </select>
+
+</mapper>

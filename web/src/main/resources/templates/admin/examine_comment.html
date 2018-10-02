@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>MineLibrary</title>
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="icon" type="image/png" href="../assets/i/favicon.png">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="apple-touch-icon-precomposed" href="../assets/i/app-icon72x72@2x.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<header th:replace="admin/navbar::navbar('examine_comment')">
+
+</header>
+<div class="am-panel reader-main">
+    <div class="am-panel-bd">
+        <table class="am-table">
+            <thead>
+            <tr>
+                <th>书籍ID</th>
+                <th>评论人</th>
+                <th>时间</th>
+                <th>内容</th>
+                <th>状态</th>
+                <th>审核</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="comment : ${comments}">
+                <td th:text="${comment.bookId}"></td>
+                <td th:text="${comment.username}"></td>
+                <td th:text="${#dates.format(comment.created, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${comment.content}"></td>
+                <td th:if="${comment.valid == 1}" class="am-success am-text-center">审核通过</td>
+                <td th:if="${comment.valid == 0}" class="am-danger am-text-center">未通过</td>
+                <td th:if="${comment.valid == 2}" class="am-warning am-text-center">等待审核</td>
+                <td>
+                    <div class="am-btn-group">
+                        <form class="am-inline" method="post">
+                            <input type="hidden" th:value="${comment.id}" name="commentId"/>
+                            <input type="hidden" name="valid" value="1"/>
+                            <button class="am-btn am-btn-success am-btn-xs">通过</button>
+                        </form>
+                        <form class="am-inline" method="post">
+                            <input type="hidden" th:value="${comment.id}" name="commentId"/>
+                            <input type="hidden" value="0" name="valid"/>
+                            <button class="am-btn am-btn-danger am-btn-xs">驳回</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <ul th:if="!${#lists.size(comments) == 0} "data-am-widget="pagination" class="am-pagination am-pagination-select" style="margin: 0px 20%">
+
+            <li class="am-pagination-prev ">
+                <a th:href="${'/admin/examine_comment?page=' + (page - 1 < 0 ? page : page - 1)}" class="">下一页</a>
+            </li>
+            </li>
+            <li class="am-pagination-next ">
+                <a th:href="${'/admin/examine_comment?page=' + (page + 1)}" class="">下一页</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="/assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="/assets/js/amazeui.min.js"></script>
+</html>
